@@ -1,0 +1,65 @@
+<!--pages/orderList/orderList.wxml-->
+<loading wx:if="{{showLoading}}">加载中</loading>
+<view class="order">
+  <!-- top -->
+  <view class="order-top">
+    <view class="{{listIndex == index ? 'order-t-active' : ''}}" wx:for="{{lists}}" wx:key="index" bindtap="bindNav" data-index="{{index}}">{{item.name}}</view>
+  </view>
+  <!-- 订单 -->
+  <view class="order-list">
+    <!-- 第一个订单 -->
+    <view class="order-l-one" wx:for="{{datas}}" wx:for-item="i" wx:key="index" wx:for-index="k">
+      <!-- top -->
+      <view class="order-one-top" bindtap="bindtapMall" data-shopid="{{i.shopId}}">
+        <image src="../../images/cart-03.png"></image>
+        <view>{{i.shopName}}
+          <text class="arrow1"></text>
+        </view>
+        <view wx:if="{{i.orderStatus == -2}}">{{i.orderFrom == 0 ? '待付款' : '待付款 秒杀订单'}}</view>
+        <view wx:if="{{i.orderStatus == 0 || i.orderStatus == 1 || i.orderStatus == 2}}">{{i.orderFrom == 0 ? '待发货' : '待发货 秒杀订单'}}</view>
+        <view wx:if="{{i.orderStatus == 3}}">{{i.orderFrom == 0 ? '待收货' : '待收货 秒杀订单'}}</view>
+        <view wx:if="{{i.orderStatus == 4}}">{{i.orderFrom == 0 ? '已完成' : '已完成 秒杀订单'}}</view>
+        <view wx:if="{{i.orderStatus == -3 && i.isRefund == 0}}">{{i.orderFrom == 0 ? '退款中' : '退款中 秒杀订单'}}</view>
+        <view wx:if="{{i.orderStatus == -3 && i.isRefund == 1}}">退款已完成</view>
+      </view>
+      <!-- 商品 -->
+      <view class="order-shop" bindtap="bindShops" data-orderid="{{i.orderId}}">
+        <!-- 第一件商品 -->
+        <view class="order-s-one" wx:for="{{i.goodslist}}" wx:key="index">
+          <view>
+            <image src="{{baseUrl}}{{item.goodsThums}}"></image>
+          </view>
+          <view class="order-shop-nr">
+            <view>{{item.goodsName}}</view>
+            <view>{{item.goodsAttrName}}</view>
+            <view>￥{{item.goodsPrice}}<text>数量：x{{item.goodsNums}}</text></view>
+          </view>
+        </view>
+      </view>
+      <!-- 合计 -->
+      <view class="order-hj">
+        <view>合计：
+          <text>￥{{i.realTotalMoney}}</text>
+        </view>
+        <view class="order-hj-anniu">
+          <view class="order-hj-hui" wx:if="{{i.orderStatus == -2}}" bindtap="bindCancel" data-orderid="{{i.orderId}}">取消订单</view>
+          <view class="order-hj-red" wx:if="{{i.orderStatus == -2}}" bindtap="bindPayment" data-orderid="{{i.orderId}}">继续付款</view>
+          <view class="order-hj-hui" wx:if="{{i.orderStatus == 0 || i.orderStatus == 1 || i.orderStatus == 2 || i.orderStatus == 3}}" bindtap="bindRefund" data-orderid="{{i.orderId}}">申请退款</view>
+          <view class="order-hj-red" wx:if="{{i.orderStatus == 0 || i.orderStatus == 1 || i.orderStatus == 2 || i.orderStatus == -3}}" bindtap="bindShops" data-orderid="{{i.orderId}}">查看详情</view>
+          <view class="order-hj-red" wx:if="{{i.orderStatus == 3}}" bindtap="bindReceipt" data-orderid="{{i.orderId}}" data-index="{{k}}">确认收货</view>
+          <view class="order-hj-hui" wx:if="{{i.orderStatus == 4}}" bindtap="bindDelete" data-orderid="{{i.orderId}}">删除订单</view>
+          <view class="order-hj-red" wx:if="{{i.orderStatus == 4 && i.isAppraises == 0 && i.isAppraises != 1}}" bindtap="bindEvaluate" data-orderid="{{i.orderId}}" data-length="{{i.goodslist.length}}" data-goodsid="{{i.goodslist[0].goodsId}}">去评价</view>
+          <!-- <view class="order-hj-red" wx:if="{{i.orderStatus == 4 && i.isAppraises == 1}}">已评价</view> -->
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<!-- 已加载全部 -->
+<view class="index-qb" wx:if="{{currPage == totalPage && datas.length != 0}}"> —— 别扯了，到底了 ——</view>
+<!-- 空页面-->
+<view class="cart-kong" wx:if="{{!datas || datas.length == 0}}">
+  <image src="../../images/adingdan.png"></image>
+  <view>暂无订单</view>
+  <view>~ 订单记录为空呦，快去下单吧! ~</view>
+</view>

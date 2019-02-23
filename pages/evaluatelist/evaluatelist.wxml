@@ -1,0 +1,17 @@
+<view class="evaluatelist">
+  <!-- 评价列表 -->
+  <view class="eva-list marb20" wx:for="{{datas}}" wx:key="index">
+    <view class="eva-img">
+      <image src="{{baseUrl}}{{item.goodsThums}}"></image>
+    </view>
+    <view class="eva-text">
+      <view>{{item.goodsName}}</view>
+      <view class="pjsd" wx:if="{{item.status == 0}}" bindtap="bindPing" data-orderid="{{item.orderId}}" data-goodsid="{{item.goodsId}}">
+        <image src="../../images/a_pjico1.png"></image>评价晒单
+      </view>
+      <view class="ckpj"  wx:if="{{item.status == 1}}">
+        <image src="../../images/a_pjico2.png"></image>已评价
+      </view>
+    </view>
+  </view>
+</view>

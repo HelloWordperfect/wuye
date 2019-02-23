@@ -1,0 +1,78 @@
+<!--pages/orderSubmit/orderSubmit.wxml-->
+<loading wx:if="{{showLoading}}">加载中</loading>
+<view class="submit">
+  <!-- 未添加地址 -->
+  <view class="sub-top" wx:if="{{!address}}" bindtap="bindAddress">
+    <view>
+      <image src="../../images/submit-01.png"></image>
+    </view>
+    <view>添加收货地址</view>
+    <view>
+      <image src="../../images/index-05.png"></image>
+    </view>
+  </view>
+  <!-- 添加过地址 -->
+  <view class="sub-address" wx:if="{{address}}" bindtap="bindAddress">
+    <view>
+      <image src="../../images/a_dingwei.png"></image>
+    </view>
+    <view class="sub-a-nr">
+      <view>
+        <view>姓名：{{address.userName}}</view>
+        <view>手机号：{{address.userPhone}}</view>
+      </view>
+      <view>地址：{{address.areaId1}}{{address.address}}</view>
+    </view>
+    <view>
+      <image src="../../images/my-04.png"></image>
+    </view>
+  </view>
+  <view class="sub-address-image">
+    <image src="../../images/address-bottom.png"></image>
+  </view>
+  <!-- 商品 -->
+  <view class="order-wai">
+    <view class="order-l-one" wx:for="{{goods}}" wx:for-item="i" wx:key="i" wx:for-index="k">
+      <!-- top -->
+      <view class="order-one-top" bindtap="bindShops" data-shopid="{{i[0].shopId}}">
+        <image src="../../images/cart-03.png"></image>
+        <view>{{i[0].shopName}}
+          <text class="arrow1"></text>
+        </view>
+      </view>
+      <!-- 商品 -->
+      <view class="order-shop">
+        <!-- 第一件商品 -->
+        <view class="order-s-one" wx:for="{{i}}" wx:key="index">
+          <view>
+            <image src="{{baseUrl}}{{item.goodsImage}}"></image>
+          </view>
+          <view class="order-shop-nr">
+            <view>{{item.goodsName}}</view>
+            <view>{{item.shopGui}} {{item.guigeArray}}</view>
+            <view>￥{{item.shopPrice}}<text>数量：x{{item.shopNumber}}</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 快递费用 -->
+  <view class="sub-kd">
+    <view>快递费用</view>
+    <view>￥{{deliveryMoney}}</view>
+  </view>
+  <!-- 备注 -->
+  <view class="sub-bz">
+    <view>商品备注
+      <text>(选填)</text>
+    </view>
+    <textarea placeholder="请输入您的备注信息，谢谢合作" bindinput="bindText"></textarea>
+  </view>
+  <!-- 提交 -->
+  <view class="sub-tj">
+    <view>合计：
+      <text>￥{{totalMoney}}</text>
+    </view>
+    <view bindtap="bindSubmit">提交订单</view>
+  </view>
+</view>

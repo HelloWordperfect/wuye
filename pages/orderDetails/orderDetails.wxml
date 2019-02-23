@@ -1,0 +1,91 @@
+<!--pages/orderDetails/orderDetails.wxml-->
+<loading wx:if="{{showLoading}}">加载中</loading>
+<view class="detail">
+  <view class="detail-top">当前订单状态：
+    <text wx:if="{{datas.orderStatus == -2}}">{{datas.orderFrom == 0 ? '待付款订单' : '待付款 秒杀订单'}}</text>
+    <text wx:if="{{datas.orderStatus == 0 || datas.orderStatus == 1 || datas.orderStatus == 2}}">{{datas.orderFrom == 0 ? '待发货订单' : '待发货 秒杀订单'}}</text>
+    <text wx:if="{{datas.orderStatus == 3}}">{{datas.orderFrom == 0 ? '待收货订单' : '待收货 秒杀订单'}}</text>
+    <text wx:if="{{datas.orderStatus == 4}}">{{datas.orderFrom == 0 ? '已完成订单' : '已完成 秒杀订单'}}</text>
+    <text wx:if="{{datas.orderStatus == -3 && datas.isRefund == 0}}">{{datas.orderFrom == 0 ? '退款中订单' : '退款中 秒杀订单'}}</text>
+    <text wx:if="{{datas.orderStatus == -3 && datas.isRefund == 1}}">退款已完成</text>
+  </view>
+  <!-- 地址管理 -->
+  <view class="detail-address">
+    <view>
+      <image src="../../images/a_dingwei.png"></image>
+    </view>
+    <view class="de-address-nr">
+      <view>
+        <view>姓名：{{datas.userName}}</view>
+        <view>手机号：{{datas.userPhone}}</view>
+      </view>
+      <view>地址：{{datas.areaId1}}{{datas.userAddress}}</view>
+    </view>
+  </view>
+  <view class="detail-image">
+    <image src="../../images/address-bottom.png"></image>
+  </view>
+  <!-- 商品 -->
+  <view class="order-l-one">
+    <!-- top -->
+    <view class="order-one-top" bindtap="bindMall" data-shopid="{{datas.shopId}}">
+      <image src="../../images/cart-03.png"></image>
+      <view>{{datas.shopName}}
+        <text class="arrow1"></text>
+      </view>
+    </view>
+    <!-- 商品 -->
+    <view class="order-shop">
+      <!-- 第一件商品 -->
+      <view class="order-s-one" wx:for="{{goods}}" wx:key="index" bindtap="bindShops" data-goodsid="{{item.goodsId}}">
+        <view>
+          <image src="{{baseUrl}}{{item.goodsThums}}"></image>
+        </view>
+        <view class="order-shop-nr">
+          <view>{{item.goodsName}}</view>
+          <view>{{item.goodsAttrName}}</view>
+          <view>￥{{item.shopPrice}}
+            <text> 数量：x{{item.goodsNums}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 合计 -->
+    <view class="order-hj">共计{{goods.length}}件商品 合计：
+      <text>￥{{datas.realTotalMoney}}</text>(含运费{{datas.deliverMoney}}元)</view>
+  </view>
+  <!-- 订单编号 -->
+  <view class="order-xinxi">
+    <view class="order-x-bh">订单编号
+      <text>{{datas.orderNo}}</text>
+    </view>
+    <view class="order-x-bh">下单时间
+      <text>{{datas.createTime}}</text>
+    </view>
+    <view class="order-x-bh" wx:if="{{datas.orderStatus != -3}}">{{datas.orderStatus == 4 ? '赠送积分' : '确认收货后赠送'}}
+      <text style="color: #f00;">{{datas.orderScore}} 积分</text>
+    </view>
+    <view class="order-x-xq">我的备注：
+      <text>{{datas.orderRemarks ? datas.orderRemarks : '暂无备注'}}</text>
+    </view>
+    <view class="order-x-xq" wx:if="{{datas.orderStatus == -3}}">退款原因：
+      <text>{{datas.refundRemark}}</text>
+    </view>
+  </view>
+  <!-- 订单状态 -->
+  <view class="order-xinxi">
+    <view class="order-x-bh" wx:for="{{logs}}" wx:key="index">{{item.logContent}}
+      <text class="order-text">{{item.logTime}}</text>
+    </view>
+  </view>
+  <!-- 按钮 -->
+  <view class="order-anniu" wx:if="{{datas.orderStatus != -3 && datas.orderFlag != '-1'}}">
+    <view class="order-an-hui" wx:if="{{datas.orderStatus == -2}}" bindtap="bindCancel" data-orderid="{{datas.orderId}}">取消订单</view>
+    <view class="order-an-red" wx:if="{{datas.orderStatus == -2}}" bindtap="bindPayment" data-orderid="{{datas.orderId}}">继续付款</view>
+    <view class="order-an-hui" wx:if="{{datas.orderStatus == 0 || datas.orderStatus == 1 || datas.orderStatus == 2 || datas.orderStatus == 3}}" bindtap="bindRefund" data-orderid="{{datas.orderId}}">申请退款</view>
+    <view class="order-an-red" wx:if="{{datas.orderStatus == 3}}" bindtap="bindReceipt" data-orderid="{{datas.orderId}}">确认收货</view>
+    <view class="order-an-hui" wx:if="{{datas.orderStatus == 4}}" bindtap="bindDelete" data-orderid="{{datas.orderId}}">删除订单</view>
+    <view class="order-an-red" wx:if="{{datas.orderStatus == 4 && datas.isAppraises == 0 && datas.isAppraises != 1}}" bindtap="bindEvaluate" data-orderid="{{datas.orderId}}" data-length="{{goods.length}}" data-goodsid="{{goods[0].goodsId}}">去评价</view>
+    <!-- <view class="order-an-red" wx:if="{{datas.orderStatus == 4 && datas.isAppraises == 1}}">已评价</view> -->
+  </view>
+</view>

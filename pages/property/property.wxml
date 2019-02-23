@@ -1,0 +1,71 @@
+<!--pages/property/property.wxml-->
+<loading wx:if="{{showLoading}}">加载中</loading>
+<!-- 头部背景图 -->
+<view class="pro-bj">
+  <image src="../../images/wyf_top.jpg"></image>
+</view>
+<!-- 正常内容 -->
+<view class="pro">
+	<!-- top -->
+	<view class="pro-top">
+		<image src="../../images/wyf_tb.png"></image>
+	</view>
+	<!-- 搜索框 -->
+	<view class="pro-input">
+		<input type="text" focus="true" name="" value="{{input}}" bindinput="bindInput" placeholder="请输入户号/户主姓名/预留电话" bindblur="bindBlur" />
+		<view><image src="../../images/index-sou.png"></image></view>
+	</view>
+	<!-- 查询的信息 -->
+	<view class="pro-xin"  wx:for="{{datas}}" wx:key="index">
+		<view class="pro-xin-item">
+			<view>户主户号</view>
+			<view>{{item.userNum}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>户主姓名</view>
+			<view>{{item.userName}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>户主编号</view>
+			<view>{{item.userCode}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>预留电话</view>
+			<view>{{item.userPhone}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>户主地址</view>
+			<view>{{item.address}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>应缴费用</view>
+			<view class="pro-x-da">￥{{!item.money ? '0' : item.money}}</view>
+		</view>
+		<view class="pro-xin-item" wx:if="{{item.isMoney == 1}}">
+			<view>积分抵扣</view>
+			<view class="pro-x-da">￥{{!item.userScore ? '0' : item.userScore}}</view>
+		</view>
+		<view class="pro-xin-item" wx:if="{{item.isMoney == 1}}">
+			<view>实际缴纳</view>
+			<view class="pro-x-da">￥{{item.needPay}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>是否缴费</view>
+			<view style="color: #fe6306;">{{item.isMoney == 1 ? '已缴费' : '未缴费'}}</view>
+		</view>
+		<view class="pro-xin-item">
+			<view>应缴日期</view>
+			<view>{{item.createTime}}</view>
+		</view>
+		<view class="pro-xin-item" wx:if="{{item.isMoney == 1}}">
+			<view>缴费日期</view>
+			<view>{{item.endTime}}</view>
+		</view>
+	</view>
+	<!-- 暂无信息 -->
+	<view class="pro-wu" wx:if="{{!datas || datas.length == 0}}">
+		<image src="../../images/asuosou.png"></image>
+		<view>暂无信息</view>
+		<view>请在上方输入您的信息进行查询</view>
+	</view>
+</view>
